@@ -8,7 +8,6 @@ const MathKangarooGenerator = () => {
     const [testDate, setTestDate] = useState('');
 
     // Answer Sheet consts
-
     const generateTestId = () => {
     return Math.floor(10000 + Math.random() * 90000);
   };
@@ -27,7 +26,8 @@ const MathKangarooGenerator = () => {
     <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         minHeight: '100vh',
-        padding: '2rem'
+        padding: '2rem',
+        fontFamily: "'Space Grotesk', -apple-system, sans-serif",
     }}>
         <style>{`
         .input-field {
