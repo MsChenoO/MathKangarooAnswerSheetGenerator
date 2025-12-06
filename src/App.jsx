@@ -117,13 +117,16 @@ const MathKangarooGenerator = () => {
           box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
         `}</style>
-        {/* <div style={{ maxWidth: '1200px', margin: '0 auto' }}> */}
+
+        {/* Main survey starts here*/}
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '3rem'  }}>
                 <h1 className="title">Math Kangaroo</h1>
                 <div className="subtitle">Mock Practice Answer Sheet Generator</div>
             </div>
 
-            <div>
+            {/* {!showPreview ? ( */}
+                <div className="glass-card" style={{ padding: '3rem', maxWidth: '600px', margin: '0 auto' }}>
                 <div style={{ marginBottom: '24px' }}>
                     <label>Student Name</label>
                     <input
@@ -167,9 +170,9 @@ const MathKangarooGenerator = () => {
                     Generate Answer Sheet Preview
                 </button>
             </div>
-        </div>
-    // </div>
-    );
+            {/* ) */}
+    </div>
+    </div>)
 };
 
 export default MathKangarooGenerator;
