@@ -1,6 +1,28 @@
 import React, { useState, useRef } from 'react';
 
-function App() {
+const MathKangarooGenerator = () => {
+    // Survey form state
+    const [studentName, setStudentName] = useState('');
+    const [grade, setGrade] = useState('');
+    const [testType, setTestType] = useState('');
+    const [testDate, setTestDate] = useState('');
+
+    // Answer Sheet consts
+
+    const generateTestId = () => {
+    return Math.floor(10000 + Math.random() * 90000);
+  };
+    const testId = generateTestId();
+    const questionCount = parseInt(grade) <= 4 ? 24 : 30;
+
+    const grades = [
+    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'
+  ];
+    const handleGradeChange = (e) => {
+        const selectedGrade = e.target.value;
+        setGrade(selectedGrade);
+        setTestType(`Math Kangaroo - Grade ${selectedGrade}`);
+    };
     return (
     <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -87,4 +109,4 @@ function App() {
     );
 };
 
-export default App;
+export default MathKangarooGenerator;
