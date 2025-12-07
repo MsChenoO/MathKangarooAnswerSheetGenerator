@@ -104,6 +104,7 @@ const MathKangarooGenerator = () => {
         }
 
         .input-field {
+          box-sizing: border-box;
           background: rgba(255, 255, 255, 0.9);
           border: 2px solid transparent;
           border-radius: 12px;
