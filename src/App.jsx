@@ -134,6 +134,7 @@ const MathKangarooGenerator = () => {
           font-family: 'Space Grotesk', sans-serif;
           display: inline-flex;
           align-items: center;
+          justify-content: center;
           gap: 8px;
         }
 
@@ -269,7 +270,7 @@ const MathKangarooGenerator = () => {
               style={{
                 width: '100%',
                 opacity: (!studentName || !grade) ? 0.5 : 1,
-                cursor: (!studentName || !grade) ? 'not-allowed' : 'pointer'
+                cursor: (!studentName || !grade) ? 'not-allowed' : 'pointer',
               }}
             >
               Generate Answer Sheet Preview
