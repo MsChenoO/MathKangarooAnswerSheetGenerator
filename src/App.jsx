@@ -371,7 +371,11 @@ const AnswerSheet = ({ studentName, grade, testId, testDate, questionCount }) =>
       fontFamily: "'Arial', sans-serif",
       padding: '20px',
       maxWidth: '800px',
-      margin: '0 auto'
+      margin: '0 auto',
+      display: 'flex',              
+      flexDirection: 'column',
+      alignItems: 'center',         
+      boxSizing: 'border-box'
     }}>
       <div style={{
         border: '3px solid black',
@@ -411,7 +415,7 @@ const AnswerSheet = ({ studentName, grade, testId, testDate, questionCount }) =>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px'}}>
         <div>
           {Array.from({ length: leftColumn }, (_, i) => (
             <div key={i + 1} style={{ 
