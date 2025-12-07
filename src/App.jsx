@@ -5,7 +5,7 @@ const MathKangarooGenerator = () => {
     // Survey form state
   const [studentName, setStudentName] = useState('');
   const [grade, setGrade] = useState('');
-  const [testType, setTestType] = useState('');
+  const [testType, setTestType] = useState('Math Kangaroo');
   const [testDate, setTestDate] = useState('');
   const [showPreview, setShowPreview] = useState(false);
   const previewRef = useRef(null);
@@ -211,7 +211,7 @@ const MathKangarooGenerator = () => {
               <input
                 type="text"
                 className="input-field"
-                placeholder="Enter student's full name"
+                placeholder="Please enter student's full name"
                 value={studentName}
                 onChange={(e) => setStudentName(e.target.value)}
               />
@@ -221,6 +221,7 @@ const MathKangarooGenerator = () => {
               <label className="label">Grade *</label>
               <select
                 className="input-field"
+                placeholder="Please select grade"
                 value={grade}
                 onChange={handleGradeChange}
                 style={{ cursor: 'pointer' }}
