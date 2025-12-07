@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Download, Printer, FileImage } from 'lucide-react';
 
 const MathKangarooGenerator = () => {
     // Survey form state
@@ -12,13 +13,14 @@ const MathKangarooGenerator = () => {
     // Answer Sheet consts
     const generateTestId = () => {
         return Math.floor(10000 + Math.random() * 90000);
-  };
+    };
     const testId = generateTestId();
     const questionCount = parseInt(grade) <= 4 ? 24 : 30;
 
     const grades = [
     '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'
-  ];
+    ];
+
     const handleGradeChange = (e) => {
         const selectedGrade = e.target.value;
         setGrade(selectedGrade);
@@ -26,9 +28,45 @@ const MathKangarooGenerator = () => {
     };
 
     const handleGeneratePreview = () => {
-    if (studentName && grade) {
-      setShowPreview(true);
-    }
+        if (studentName && grade) {
+            setShowPreview(true);
+        }
+    };
+
+    const downloadAsPNG = async () => {
+    const html2canvas = (await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm')).default;
+    const canvas = await html2canvas(previewRef.current, {
+      scale: 2,
+      backgroundColor: '#ffffff'
+    });
+    const link = document.createElement('a');
+    link.download = `${studentName.replace(/\s+/g, '_')}_MathKangaroo.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+  };
+
+  const downloadAsPDF = async () => {
+    const html2canvas = (await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm')).default;
+    const { jsPDF } = await import('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm');
+    
+    const canvas = await html2canvas(previewRef.current, {
+      scale: 2,
+      backgroundColor: '#ffffff'
+    });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+    const imgWidth = 210;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+    pdf.save(`${studentName.replace(/\s+/g, '_')}_MathKangaroo.pdf`);
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
     return (
@@ -40,7 +78,22 @@ const MathKangarooGenerator = () => {
     }}>
         <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Serif+Display&display=swap');
-        
+
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #answer-sheet, #answer-sheet * {
+            visibility: visible;
+          }
+          #answer-sheet {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+          }
+        }
+
         .glass-card {
           background: rgba(255, 255, 255, 0.1);
           backdrop-filter: blur(10px);
@@ -125,7 +178,20 @@ const MathKangarooGenerator = () => {
           transform: translateY(-2px);
           box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
-        `}</style>
+        
+        .bubble-option {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          border: 2px solid #333;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          font-size: 14px;
+          background: white;
+        }
+    `}</style>
 
         {/* Main survey starts here*/}
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
@@ -259,6 +325,143 @@ const MathKangarooGenerator = () => {
         </div>
     </div>
     );
+};
+
+const AnswerSheet = ({ studentName, grade, testId, testDate, questionCount }) => {
+  const formatDate = (dateStr) => {
+    if (!dateStr) return new Date().toLocaleDateString('en-US', { 
+      month: 'numeric', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { 
+      month: 'numeric', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  };
+
+  // Generate fake barcode pattern
+  const generateBarcode = () => {
+    const patterns = ['█', '▌', '▐', '│', '║', '▌'];
+    let barcode = '█║║ ';
+    const idStr = testId.toString();
+    for (let i = 0; i < idStr.length; i++) {
+      const digit = parseInt(idStr[i]);
+      for (let j = 0; j < 3; j++) {
+        barcode += patterns[digit % patterns.length];
+      }
+      barcode += ' ';
+    }
+    barcode += '█║║';
+    return barcode;
+  };
+
+  const options = ['A', 'B', 'C', 'D', 'E'];
+  const leftColumn = Math.ceil(questionCount / 2);
+
+  return (
+    <div style={{
+      background: 'white',
+      fontFamily: "'Arial', sans-serif",
+      padding: '20px',
+      maxWidth: '800px',
+      margin: '0 auto'
+    }}>
+      <div style={{
+        border: '3px solid black',
+        padding: '15px',
+        marginBottom: '20px'
+      }}>
+        <div style={{
+          fontSize: '32px',
+          fontWeight: 'bold',
+          letterSpacing: '4px',
+          marginBottom: '15px',
+          fontFamily: 'monospace'
+        }}>
+          {generateBarcode()}
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          <div>
+            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>
+              {testId}
+            </div>
+            <div style={{ fontSize: '14px', marginTop: '5px' }}>
+              Grade: {grade}
+            </div>
+            <div style={{ fontSize: '14px', marginTop: '5px' }}>
+              Section: Mock Practice Session
+            </div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>
+              {studentName}
+            </div>
+            <div style={{ fontSize: '14px', marginTop: '5px' }}>
+              Test ID: {testId} on {formatDate(testDate)}, Page: 1
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
+        <div>
+          {Array.from({ length: leftColumn }, (_, i) => (
+            <div key={i + 1} style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              marginBottom: '12px',
+              gap: '8px'
+            }}>
+              <div style={{ 
+                fontWeight: 'bold', 
+                width: '30px',
+                fontSize: '16px'
+              }}>
+                {i + 1}
+              </div>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {options.map(option => (
+                  <div key={option} className="bubble-option">
+                    {option}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div>
+          {Array.from({ length: questionCount - leftColumn }, (_, i) => (
+            <div key={leftColumn + i + 1} style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              marginBottom: '12px',
+              gap: '8px'
+            }}>
+              <div style={{ 
+                fontWeight: 'bold', 
+                width: '30px',
+                fontSize: '16px'
+              }}>
+                {leftColumn + i + 1}
+              </div>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {options.map(option => (
+                  <div key={option} className="bubble-option">
+                    {option}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default MathKangarooGenerator;
